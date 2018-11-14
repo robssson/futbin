@@ -12,6 +12,11 @@ def get_data_from_url():
     req = urllib.request.Request(url, headers=headers)
     res = urllib.request.urlopen(req)
     text = res.read()
+    get_totw_players(text)
+
+
+def get_totw_players(text):
+    """ Scrape players TOTW with their OVERALL from this week """
     soup = BeautifulSoup(text, 'html.parser')
     totw_raw = str(soup.find('div', attrs={'id': 'totw'}))
     soup = BeautifulSoup(totw_raw, 'html.parser')
@@ -27,11 +32,8 @@ def get_data_from_url():
             player_totw[player_idx] = {"name:": name.group(1), 
                                        "rating": rating.text}
             totw.update(player_totw)
-    with open("totw_11.json", "w+") as f:
-        f.write(json.dump(totw, f))
-    print(totw)
+
 
 if __name__ == '__main__':
     get_data_from_url()
 
-# <a href="/19/player/17203/Manuel Schäffler" target="">
